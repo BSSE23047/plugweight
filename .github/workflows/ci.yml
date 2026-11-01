@@ -19,5 +19,10 @@ jobs:
         with:
           node-version: ${{ matrix.node }}
       - run: npm ci
+      - run: npm install -g @anthropic-ai/claude-code@2.1.316
       - run: npm run typecheck
+      - run: npm run build
+      # No credentials: integration tests only talk to the local stand-in.
       - run: npm test
+        env:
+          RUN_INTEGRATION: "1"
