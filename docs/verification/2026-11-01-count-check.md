@@ -24,3 +24,14 @@ The Capture workflow ran on Ubuntu with Claude Code 2.1.316 in containers. Added
 | ralph-loop | 180 | 180 |
 
 The first full capture exposed four errors, all fixed before any result was published: Claude Code's own MCP state notices were counted against plugins, startup hook output and multi-line agent descriptions were misclassified, marketplace-defined plugins failed to load under `--plugin-dir`, and first-run downloads could decide an MCP plugin's result.
+
+## Clean checkout
+
+A fresh clone of commit 4a5f83b, built with the README's steps, reproduced the published figures for the four plugins installed on the test Mac. Added characters were identical on all four.
+
+| plugin | published | reproduced | result |
+| --- | --- | --- | --- |
+| superpowers | 2180 | 2177 | PASS |
+| claude-md-management | 174 | 174 | PASS |
+| skill-creator | 115 | 109 | PASS |
+| ralph-loop | 88 | 85 | PASS |

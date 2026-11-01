@@ -5,6 +5,8 @@
   "type": "module",
   "license": "MIT",
   "author": "Nauraiz Haider",
+  "keywords": ["claude-code", "claude", "plugins", "tokens", "cli"],
+  "homepage": "https://github.com/BSSE23047/plugweight#readme",
   "repository": "github:BSSE23047/plugweight",
   "engines": {
     "node": ">=20"
@@ -18,7 +20,8 @@
   "scripts": {
     "build": "tsc -p tsconfig.json",
     "test": "vitest run",
-    "typecheck": "tsc -p tsconfig.json --noEmit"
+    "typecheck": "tsc -p tsconfig.json --noEmit",
+    "prepublishOnly": "npm run build"
   },
   "devDependencies": {
     "@types/node": "^20.19.43",

@@ -26,3 +26,14 @@ jobs:
       - run: npm test
         env:
           RUN_INTEGRATION: "1"
+  site:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - run: npm ci
+        working-directory: site
+      - run: npx next build
+        working-directory: site
