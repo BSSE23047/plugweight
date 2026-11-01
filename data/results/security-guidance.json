@@ -1,0 +1,18 @@
+{
+  "id": "security-guidance@claude-plugins-official",
+  "name": "security-guidance",
+  "installs": 268918,
+  "repo": "https://github.com/anthropics/claude-plugins-official.git",
+  "path": "plugins/security-guidance",
+  "commit": "a7ba5b93db0c7c8d17f3f1d25853adca79598a1a",
+  "status": "ok",
+  "tokens": 0,
+  "chars": 0,
+  "minimum": false,
+  "sections": [],
+  "mcp": [],
+  "warnings": [],
+  "claudeVersion": "2.1.316",
+  "countModel": "claude-haiku-5-5",
+  "measuredAt": "2026-11-01"
+}

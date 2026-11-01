@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import { CopyCommand } from "@/components/CopyCommand";
-import { figureText, KIND_LABELS, shareOf } from "@/lib/format";
+import { figureText, KIND_LABELS, needsSetup, shareOf } from "@/lib/format";
 import { loadAdded, loadEntry, loadResults, SITE_URL } from "@/lib/results";
 
 export const dynamicParams = false;
@@ -17,7 +17,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const { name } = await params;
   const entry = loadEntry(name);
   if (!entry) return {};
-  const figure = entry.status === "failed" ? "could not be measured" : `adds ${figureText(entry)} tokens to every session`;
+  const figure = entry.status === "failed" ? "could not be measured" : needsSetup(entry) ? "needs setup before it can be measured" : `adds ${figureText(entry)} tokens to every session`;
   return { title: name, description: `${name} ${figure}. Measured with plugweight.` };
 }
 
@@ -32,6 +32,7 @@ export default async function PluginPage({ params }: Props) {
   if (!entry) notFound();
   const added = loadAdded(name);
   const shares = shareOf(entry);
+  const setup = needsSetup(entry);
   const badge = `[![session cost](https://img.shields.io/endpoint?url=${encodeURIComponent(`${SITE_URL}/badge/${name}.json`)})](${SITE_URL}/plugin/${name})`;
 
   return (
@@ -43,7 +44,13 @@ export default async function PluginPage({ params }: Props) {
         {entry.ownProject ? <p className="mt-2 text-sm text-ink-2">This is the author&apos;s own plugin, measured the same way as the rest.</p> : null}
         <p className="mt-8 font-mono text-5xl tabular-nums tracking-tight md:text-7xl">{figureText(entry)}</p>
         <p className="mt-2 text-ink-2">
-          {entry.status === "failed" ? entry.reason : entry.status === "varies" ? "tokens added per session. The text changes between runs, so this is a range." : "tokens added per session"}
+          {entry.status === "failed"
+            ? entry.reason
+            : setup
+              ? "This plugin needs a sign-in or its own settings, so a clean session cannot show its real cost."
+              : entry.status === "varies"
+                ? "tokens added per session. The text changes between runs, so this is a range."
+                : "tokens added per session"}
         </p>
         {shares.length > 0 ? (
           <dl className="mt-6 flex flex-wrap gap-x-8 gap-y-2 text-sm">
@@ -59,17 +66,25 @@ export default async function PluginPage({ params }: Props) {
 
       {entry.minimum || entry.warnings.length > 0 ? (
         <section className="mb-12 max-w-[70ch] border-l-2 border-accent pl-4 text-sm leading-relaxed">
-          <p className="font-medium">This figure may be low.</p>
-          {entry.minimum ? <p className="mt-1 text-ink-2">Part of this plugin could not run in a clean session with no sign-in or settings, so its real cost may be higher.</p> : null}
+          <p className="font-medium">{setup ? "Why there is no figure" : "This figure may be low."}</p>
+          {entry.minimum && !setup ? <p className="mt-1 text-ink-2">Part of this plugin could not run in a clean session with no sign-in or settings, so its real cost may be higher.</p> : null}
           {entry.warnings.map((w) => <p key={w} className="mt-1 text-ink-2">{w}</p>)}
         </section>
       ) : null}
 
-      <section className="grid gap-12 md:grid-cols-[1fr_300px]">
+      <section className="grid grid-cols-1 gap-12 md:grid-cols-[minmax(0,1fr)_300px]">
         <div className="min-w-0">
           <h2 className="font-display text-2xl font-bold tracking-tight">What it adds</h2>
           {added.length === 0 ? (
-            <p className="mt-4 text-ink-2">{entry.status === "failed" ? "Nothing was captured." : "This plugin adds no text to the start of a session."}</p>
+            <p className="mt-4 text-ink-2">
+              {entry.status === "failed"
+                ? "Nothing was captured."
+                : setup
+                  ? "Nothing appeared in a clean session. Once set up, its tool names would be added."
+                  : entry.status === "varies"
+                    ? "This run added no text. Other runs did, which is why the figure is a range."
+                    : "This plugin adds no text to the start of a session."}
+            </p>
           ) : (
             added.map((section, i) => (
               <div key={`${section.kind}-${i}`} className="mt-6">
@@ -81,7 +96,7 @@ export default async function PluginPage({ params }: Props) {
           {entry.mcp.length > 0 ? <p className="mt-4 max-w-[65ch] text-sm text-ink-2">MCP tool schemas load on demand and are not included. Only what is sent at session start is.</p> : null}
         </div>
 
-        <aside className="space-y-6 text-sm">
+        <aside className="min-w-0 space-y-6 text-sm">
           <dl className="space-y-3">
             <div><dt className="text-ink-2">Installs</dt><dd className="font-mono tabular-nums">{entry.installs?.toLocaleString("en-US") ?? "Not in the install count"}</dd></div>
             <div><dt className="text-ink-2">Measured</dt><dd className="font-mono">{entry.measuredAt}</dd></div>

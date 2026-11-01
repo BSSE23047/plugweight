@@ -1,0 +1,32 @@
+{
+  "id": "chrome-devtools-mcp@claude-plugins-official",
+  "name": "chrome-devtools-mcp",
+  "installs": 123586,
+  "repo": "https://github.com/ChromeDevTools/chrome-devtools-mcp.git",
+  "path": "",
+  "commit": "a878bcad39584337e055778353246820deafa7c0",
+  "status": "ok",
+  "tokens": 1903,
+  "chars": 4144,
+  "minimum": false,
+  "sections": [
+    {
+      "kind": "tools",
+      "chars": 2019
+    },
+    {
+      "kind": "listing",
+      "chars": 2124
+    }
+  ],
+  "mcp": [
+    {
+      "name": "plugin:chrome-devtools-mcp:chrome-devtools",
+      "status": "connected"
+    }
+  ],
+  "warnings": [],
+  "claudeVersion": "2.1.316",
+  "countModel": "claude-haiku-5-5",
+  "measuredAt": "2026-11-01"
+}

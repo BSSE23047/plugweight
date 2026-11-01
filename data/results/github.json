@@ -1,0 +1,25 @@
+{
+  "id": "github@claude-plugins-official",
+  "name": "github",
+  "installs": 345391,
+  "repo": "https://github.com/anthropics/claude-plugins-official.git",
+  "path": "external_plugins/github",
+  "commit": "a7ba5b93db0c7c8d17f3f1d25853adca79598a1a",
+  "status": "ok",
+  "tokens": 0,
+  "chars": 0,
+  "minimum": true,
+  "sections": [],
+  "mcp": [
+    {
+      "name": "plugin:github:github",
+      "status": "failed"
+    }
+  ],
+  "warnings": [
+    "MCP server plugin:github:github did not connect (failed), so its tools are not counted."
+  ],
+  "claudeVersion": "2.1.316",
+  "countModel": "claude-haiku-5-5",
+  "measuredAt": "2026-11-01"
+}

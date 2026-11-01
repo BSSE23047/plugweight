@@ -1,0 +1,34 @@
+{
+  "id": "vercel@claude-plugins-official",
+  "name": "vercel",
+  "installs": 292985,
+  "repo": "https://github.com/vercel/vercel-plugin.git",
+  "path": "",
+  "commit": "882e66c2698689324c341b7bb8fd8beb92c27bf6",
+  "status": "ok",
+  "tokens": 8079,
+  "chars": 21870,
+  "minimum": true,
+  "sections": [
+    {
+      "kind": "hook",
+      "chars": 8797
+    },
+    {
+      "kind": "listing",
+      "chars": 13072
+    }
+  ],
+  "mcp": [
+    {
+      "name": "plugin:vercel:vercel",
+      "status": "needs-auth"
+    }
+  ],
+  "warnings": [
+    "MCP server plugin:vercel:vercel did not connect (needs-auth), so its tools are not counted."
+  ],
+  "claudeVersion": "2.1.316",
+  "countModel": "claude-haiku-5-5",
+  "measuredAt": "2026-11-01"
+}

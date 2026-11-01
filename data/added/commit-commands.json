@@ -1,0 +1,8 @@
+{
+  "sections": [
+    {
+      "kind": "listing",
+      "text": "- commit-commands:clean_gone: Cleans up all git branches marked as [gone] (branches that have been deleted on the remote but still exist locally), including removing associated worktrees.\n- commit-commands:commit-push-pr: Commit, push, and open a PR\n- commit-commands:commit: Create a git commit"
+    }
+  ]
+}

@@ -11,3 +11,16 @@ Date: 2026-11-01. Claude Code 2.1.316, macOS, counting on haiku. Command: `npm r
 | ralph-loop | 88 | 89 | 1 | PASS |
 
 Three plugins on one machine. Not yet checked: MCP plugins and Linux.
+
+## Linux
+
+The Capture workflow ran on Ubuntu with Claude Code 2.1.316 in containers. Added text sizes matched the Mac exactly on the four plugins that exist in both:
+
+| plugin | added characters on Mac | added characters on Linux |
+| --- | --- | --- |
+| superpowers | 6,329 | 6,329 |
+| claude-md-management | 472 | 472 |
+| skill-creator | 350 | 350 |
+| ralph-loop | 180 | 180 |
+
+The first full capture exposed four errors, all fixed before any result was published: Claude Code's own MCP state notices were counted against plugins, startup hook output and multi-line agent descriptions were misclassified, marketplace-defined plugins failed to load under `--plugin-dir`, and first-run downloads could decide an MCP plugin's result.

@@ -15,9 +15,11 @@ const BAR: Record<SectionKind, string> = {
 
 function Bar({ entry, max, index }: { entry: Entry; max: number; index: number }) {
   const width = max === 0 ? 0 : Math.max((weightOf(entry) / max) * 100, 0.6);
+  const shares = shareOf(entry);
   return (
     <div className="weigh flex h-3" style={{ width: `${width}%`, ["--i" as string]: index }} aria-hidden>
-      {shareOf(entry).map((s) => (
+      {shares.length === 0 ? <span className="w-full" style={{ background: "var(--bar-other)" }} /> : null}
+      {shares.map((s) => (
         <span key={s.kind} style={{ width: `${s.share * 100}%`, background: BAR[s.kind] }} />
       ))}
     </div>

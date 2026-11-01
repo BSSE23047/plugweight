@@ -1,0 +1,28 @@
+{
+  "id": "playwright@claude-plugins-official",
+  "name": "playwright",
+  "installs": 358117,
+  "repo": "https://github.com/anthropics/claude-plugins-official.git",
+  "path": "external_plugins/playwright",
+  "commit": "a7ba5b93db0c7c8d17f3f1d25853adca79598a1a",
+  "status": "ok",
+  "tokens": 585,
+  "chars": 1330,
+  "minimum": false,
+  "sections": [
+    {
+      "kind": "tools",
+      "chars": 1330
+    }
+  ],
+  "mcp": [
+    {
+      "name": "plugin:playwright:playwright",
+      "status": "connected"
+    }
+  ],
+  "warnings": [],
+  "claudeVersion": "2.1.316",
+  "countModel": "claude-haiku-5-5",
+  "measuredAt": "2026-11-01"
+}

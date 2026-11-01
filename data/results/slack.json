@@ -1,0 +1,30 @@
+{
+  "id": "slack@claude-plugins-official",
+  "name": "slack",
+  "installs": 111919,
+  "repo": "https://github.com/slackapi/slack-mcp-plugin.git",
+  "path": "",
+  "commit": "ad6be88096678812c448b0279390b4d25bce0164",
+  "status": "ok",
+  "tokens": 1480,
+  "chars": 4132,
+  "minimum": true,
+  "sections": [
+    {
+      "kind": "listing",
+      "chars": 4132
+    }
+  ],
+  "mcp": [
+    {
+      "name": "plugin:slack:slack",
+      "status": "needs-auth"
+    }
+  ],
+  "warnings": [
+    "MCP server plugin:slack:slack did not connect (needs-auth), so its tools are not counted."
+  ],
+  "claudeVersion": "2.1.316",
+  "countModel": "claude-haiku-5-5",
+  "measuredAt": "2026-11-01"
+}

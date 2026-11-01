@@ -1,0 +1,30 @@
+{
+  "id": "supabase@claude-plugins-official",
+  "name": "supabase",
+  "installs": 126512,
+  "repo": "https://github.com/supabase-community/supabase-plugin.git",
+  "path": "",
+  "commit": "2c6d02d4565babe784103ee4d446a93ae9b24151",
+  "status": "ok",
+  "tokens": 635,
+  "chars": 1689,
+  "minimum": true,
+  "sections": [
+    {
+      "kind": "listing",
+      "chars": 1689
+    }
+  ],
+  "mcp": [
+    {
+      "name": "plugin:supabase:supabase",
+      "status": "needs-auth"
+    }
+  ],
+  "warnings": [
+    "MCP server plugin:supabase:supabase did not connect (needs-auth), so its tools are not counted."
+  ],
+  "claudeVersion": "2.1.316",
+  "countModel": "claude-haiku-5-5",
+  "measuredAt": "2026-11-01"
+}

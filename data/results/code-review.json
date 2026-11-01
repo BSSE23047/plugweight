@@ -1,0 +1,23 @@
+{
+  "id": "code-review@claude-plugins-official",
+  "name": "code-review",
+  "installs": 477558,
+  "repo": "https://github.com/anthropics/claude-plugins-official.git",
+  "path": "plugins/code-review",
+  "commit": "a7ba5b93db0c7c8d17f3f1d25853adca79598a1a",
+  "status": "ok",
+  "tokens": 19,
+  "chars": 53,
+  "minimum": false,
+  "sections": [
+    {
+      "kind": "listing",
+      "chars": 53
+    }
+  ],
+  "mcp": [],
+  "warnings": [],
+  "claudeVersion": "2.1.316",
+  "countModel": "claude-haiku-5-5",
+  "measuredAt": "2026-11-01"
+}

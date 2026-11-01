@@ -1,0 +1,30 @@
+{
+  "id": "nauraiz-dev@nauraiz-dev",
+  "name": "nauraiz-dev",
+  "installs": null,
+  "repo": "https://github.com/BSSE23047/nauraiz-dev.git",
+  "path": "",
+  "commit": "e32f1f7857dc4d4b78619bd4ac3fbb278b08a01c",
+  "status": "ok",
+  "tokens": 1202,
+  "chars": 3202,
+  "minimum": false,
+  "sections": [
+    {
+      "kind": "hook",
+      "chars": 432
+    },
+    {
+      "kind": "listing",
+      "chars": 2769
+    }
+  ],
+  "mcp": [],
+  "warnings": [
+    "Depends on superpowers@claude-plugins-official. This figure covers only its own additions, so using it costs at least that much more."
+  ],
+  "claudeVersion": "2.1.316",
+  "countModel": "claude-haiku-5-5",
+  "measuredAt": "2026-11-01",
+  "ownProject": true
+}

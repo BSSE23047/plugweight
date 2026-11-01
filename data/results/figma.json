@@ -1,0 +1,30 @@
+{
+  "id": "figma@claude-plugins-official",
+  "name": "figma",
+  "installs": 184171,
+  "repo": "https://github.com/figma/mcp-server-guide.git",
+  "path": "",
+  "commit": "f2789420e7e8b4e2465dfeb1e12e1fc6a31397e5",
+  "status": "ok",
+  "tokens": 2445,
+  "chars": 7185,
+  "minimum": true,
+  "sections": [
+    {
+      "kind": "listing",
+      "chars": 7185
+    }
+  ],
+  "mcp": [
+    {
+      "name": "plugin:figma:figma",
+      "status": "needs-auth"
+    }
+  ],
+  "warnings": [
+    "MCP server plugin:figma:figma did not connect (needs-auth), so its tools are not counted."
+  ],
+  "claudeVersion": "2.1.316",
+  "countModel": "claude-haiku-5-5",
+  "measuredAt": "2026-11-01"
+}

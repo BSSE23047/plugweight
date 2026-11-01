@@ -1,0 +1,8 @@
+{
+  "sections": [
+    {
+      "kind": "listing",
+      "text": "- ralph-loop:cancel-ralph: Cancel active Ralph Loop\n- ralph-loop:help: Explain Ralph Loop plugin and available commands\n- ralph-loop:ralph-loop: Start Ralph Loop in current session"
+    }
+  ]
+}

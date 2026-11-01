@@ -1,0 +1,27 @@
+{
+  "id": "superpowers@claude-plugins-official",
+  "name": "superpowers",
+  "installs": 1123984,
+  "repo": "https://github.com/obra/superpowers.git",
+  "path": "",
+  "commit": "bb92a77741419a4ab5f06e711a283343f1ada0c3",
+  "status": "ok",
+  "tokens": 2180,
+  "chars": 6329,
+  "minimum": false,
+  "sections": [
+    {
+      "kind": "hook",
+      "chars": 3444
+    },
+    {
+      "kind": "listing",
+      "chars": 2884
+    }
+  ],
+  "mcp": [],
+  "warnings": [],
+  "claudeVersion": "2.1.316",
+  "countModel": "claude-haiku-5-5",
+  "measuredAt": "2026-11-01"
+}
