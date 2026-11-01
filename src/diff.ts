@@ -2,9 +2,11 @@ import type { CapturedRequest } from "./types.js";
 
 export type SectionKind = "listing" | "hook" | "tools" | "system" | "other";
 export type Section = { kind: SectionKind; text: string };
-export type Added = { sections: Section[]; text: string; chars: number };
+/** `notices` are Claude Code's own messages about a plugin's state, such as "needs sign-in". The plugin did not write them, so they are not counted. */
+export type Added = { sections: Section[]; text: string; chars: number; notices: string[] };
 
-const HOOK_MARKER = /\bhook additional context:/;
+const HOOK_MARKER = /\bhook (?:additional context|success):/;
+const MCP_NOTICE = /^The following MCP servers (?:require authentication|are still connecting|are configured but failed)/;
 const LISTING_LINE = /^- [\w.-]+:[\w.-]+(:\s|$)/;
 const DEFERRED_TOOL_LINE = /^mcp__[\w-]+__[\w-]+$/;
 const TEMP_PATH = /plugweight-(?:config|cwd)-[A-Za-z0-9]+/g;
@@ -60,16 +62,24 @@ function appendSection(sections: Section[], kind: SectionKind, text: string): vo
   else sections.push({ kind, text });
 }
 
-function classifyInto(sections: Section[], added: { line: string; index: number }[], fallback: SectionKind): void {
-  let inHook = false;
+function classifyInto(sections: Section[], notices: string[], added: { line: string; index: number }[], fallback: SectionKind): void {
+  let state: "none" | "hook" | "listing" | "notice" = "none";
   let previousIndex = -2;
   for (const { line, index } of added) {
-    if (index !== previousIndex + 1) inHook = false;
+    if (index !== previousIndex + 1) state = "none";
     previousIndex = index;
-    if (HOOK_MARKER.test(line)) inHook = true;
+    if (MCP_NOTICE.test(line)) state = "notice";
+    else if (HOOK_MARKER.test(line)) state = "hook";
+    else if (state !== "hook" && state !== "notice" && LISTING_LINE.test(line)) state = "listing";
+
+    if (state === "notice") {
+      notices.push(line);
+      continue;
+    }
     let kind: SectionKind = fallback;
-    if (inHook) kind = "hook";
-    else if (LISTING_LINE.test(line)) kind = "listing";
+    if (state === "hook") kind = "hook";
+    // A long agent description runs over several lines of the same list entry.
+    else if (state === "listing") kind = "listing";
     else if (DEFERRED_TOOL_LINE.test(line)) kind = "tools";
     appendSection(sections, kind, line);
   }
@@ -108,12 +118,13 @@ export function diffRequests(base: CapturedRequest, withPlugin: CapturedRequest,
   };
 
   const sections: Section[] = [];
-  classifyInto(sections, addedLines(toLines(textOf(base.system), normalise), toLines(textOf(withPlugin.system), normalise)), "system");
-  classifyInto(sections, addedLines(toLines(textOf(base.messages), normalise), toLines(textOf(withPlugin.messages), normalise)), "other");
+  const notices: string[] = [];
+  classifyInto(sections, notices, addedLines(toLines(textOf(base.system), normalise), toLines(textOf(withPlugin.system), normalise)), "system");
+  classifyInto(sections, notices, addedLines(toLines(textOf(base.messages), normalise), toLines(textOf(withPlugin.messages), normalise)), "other");
   for (const text of diffTools(base.tools, withPlugin.tools, normalise)) sections.push({ kind: "tools", text });
 
   const text = sections.map((s) => s.text).join("\n");
-  return { sections, text, chars: text.length };
+  return { sections, text, chars: text.length, notices };
 }
 
 /** True when two measurements of one plugin added the same text. */

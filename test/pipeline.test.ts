@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { buildResult, pluginFromCatalog, selectTop, validateCapture, validatePluginEntry, type Capture, type PluginEntry } from "../src/pipeline/results.js";
+import { buildResult, manifestFromMarketplace, pluginFromCatalog, selectTop, validateCapture, validatePluginEntry, withoutDependencies, type Capture, type PluginEntry } from "../src/pipeline/results.js";
 
 const SHA = "a".repeat(40);
 const OTHER = "b".repeat(40);
@@ -34,6 +34,31 @@ describe("pluginFromCatalog", () => {
 
   it("uses the pinned commit and path of a subdirectory plugin", () => {
     expect(pluginFromCatalog(catalog[2]!, marketplace)).toMatchObject({ repo: "https://github.com/o/mono.git", path: "providers/mid", commit: OTHER });
+  });
+});
+
+describe("manifestFromMarketplace", () => {
+  const marketplace = { plugins: [{ name: "ts-lsp", version: "1.0.0", source: "./plugins/ts-lsp", category: "dev", strict: false, lspServers: { ts: { command: "x" } } }] };
+
+  it("builds a manifest from a marketplace entry, keeping what defines the plugin", () => {
+    expect(manifestFromMarketplace(marketplace, "ts-lsp")).toEqual({ name: "ts-lsp", version: "1.0.0", lspServers: { ts: { command: "x" } } });
+  });
+
+  it("returns nothing for an unknown plugin", () => {
+    expect(manifestFromMarketplace(marketplace, "other")).toBeUndefined();
+    expect(manifestFromMarketplace({}, "ts-lsp")).toBeUndefined();
+  });
+});
+
+describe("withoutDependencies", () => {
+  it("removes dependencies and says which", () => {
+    const result = withoutDependencies({ name: "a", dependencies: ["sp@official", { name: "other@m" }] });
+    expect(result.manifest).toEqual({ name: "a" });
+    expect(result.removed).toEqual(["sp@official", "other@m"]);
+  });
+
+  it("leaves a manifest with none alone", () => {
+    expect(withoutDependencies({ name: "a" })).toEqual({ manifest: { name: "a" }, removed: [] });
   });
 });
 

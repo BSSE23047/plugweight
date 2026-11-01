@@ -6,7 +6,7 @@ const plugins: InstalledPlugin[] = [
   { id: "a@m", name: "a", version: "1", dir: "/p/a", enabled: true },
   { id: "b@m", name: "b", version: "1", dir: "/p/b", enabled: true },
 ];
-const addedText = { sections: [{ kind: "listing" as const, text: "- a:x: y" }], text: "- a:x: y", chars: 8 };
+const addedText = { sections: [{ kind: "listing" as const, text: "- a:x: y" }], text: "- a:x: y", chars: 8, notices: [] };
 
 function setup(over: Partial<Deps> = {}) {
   const out: string[] = [];

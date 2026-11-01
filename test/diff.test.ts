@@ -41,6 +41,35 @@ describe("diffRequests", () => {
     ]);
   });
 
+  it("classifies hook success text as hook", () => {
+    const added = diffRequests(base, req(`SessionStart:startup hook success: # Context\n\nDetails\n${ENV}`));
+    expect(kinds(added)).toEqual(["hook"]);
+  });
+
+  it("keeps a multi-line agent description in the listing", () => {
+    const added = diffRequests(base, req(`${ENV}\n- pr:reviewer: Use this agent\n\nExamples:\n<example>one</example>`));
+    expect(kinds(added)).toEqual(["listing"]);
+    expect(added.text).toContain("Examples:");
+  });
+
+  it("does not count Claude Code's own notice about a server's state", () => {
+    for (const notice of [
+      "The following MCP servers require authentication before their tools can be used:\nplugin:a:b\n\nCarry on.",
+      "The following MCP servers are still connecting - their tools are not yet available:\nplugin:a:b",
+      "The following MCP servers are configured but failed to connect:\nplugin:a:b (ENOENT)",
+    ]) {
+      const added = diffRequests(base, req(`${ENV}\n\n${notice}\n\n- a:skill: Real text`));
+      expect(added.text).not.toContain("MCP servers");
+      expect(added.notices.join("\n")).toContain("MCP servers");
+    }
+  });
+
+  it("counts plugin text that sits beside a notice", () => {
+    const added = diffRequests(base, req(`${ENV}\n- a:skill: Real text`));
+    expect(added.notices).toEqual([]);
+    expect(added.text).toBe("- a:skill: Real text");
+  });
+
   it("does not treat an ordinary bullet as a listing", () => {
     const added = diffRequests(base, req(`${ENV}\n- Claude Code: see the docs`));
     expect(kinds(added)).toEqual(["other"]);

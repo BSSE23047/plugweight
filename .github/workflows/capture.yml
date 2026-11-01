@@ -22,7 +22,7 @@ jobs:
         env:
           ONLY: ${{ inputs.only }}
         run: |
-          names=$(jq -c --arg only "$ONLY" '[.plugins[].name | select($only == "" or (($only | split(",")) | index(.)))]' plugins.json)
+          names=$(jq -c --arg only "$ONLY" '[.plugins[].name | . as $n | select($only == "" or (($only | split(",")) | index($n) != null))]' plugins.json)
           echo "names=$names" >> "$GITHUB_OUTPUT"
   capture:
     needs: list

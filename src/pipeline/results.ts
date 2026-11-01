@@ -27,6 +27,24 @@ export function pluginFromCatalog(entry: CatalogEntry, marketplace: { repo: stri
   return { ...base, repo: entry.source.url ?? "", path: entry.source.path ?? "", commit: entry.source.sha ?? "" };
 }
 
+type ManifestSource = Record<string, unknown>;
+
+/** A strict:false marketplace entry defines the plugin itself, so its folder has no manifest of its own. */
+export function manifestFromMarketplace(marketplace: { plugins?: (ManifestSource & { name?: unknown })[] }, name: string): ManifestSource | undefined {
+  const entry = marketplace.plugins?.find((p) => p.name === name);
+  if (!entry) return undefined;
+  const { source: _source, category: _category, strict: _strict, tags: _tags, ...manifest } = entry;
+  return manifest;
+}
+
+/** Removes a manifest's dependencies, so a plugin can be measured alone. Returns what was removed. */
+export function withoutDependencies(manifest: ManifestSource): { manifest: ManifestSource; removed: string[] } {
+  const { dependencies, ...rest } = manifest;
+  if (!Array.isArray(dependencies) || dependencies.length === 0) return { manifest, removed: [] };
+  const removed = dependencies.map((d: unknown) => (typeof d === "string" ? d : String((d as { name?: unknown })?.name ?? "unknown")));
+  return { manifest: rest, removed };
+}
+
 export function validatePluginEntry(entry: PluginEntry): void {
   if (!SAFE_NAME.test(entry.name)) throw new Error(`unsafe plugin name: ${entry.name}`);
   if (!SHA.test(entry.commit)) throw new Error(`${entry.name}: commit must be a full SHA, got "${entry.commit}"`);

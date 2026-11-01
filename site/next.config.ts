@@ -1,0 +1,10 @@
+import type { NextConfig } from "next";
+import { resolve } from "node:path";
+
+const nextConfig: NextConfig = {
+  output: "export",
+  trailingSlash: false,
+  outputFileTracingRoot: resolve(process.cwd(), ".."),
+};
+
+export default nextConfig;

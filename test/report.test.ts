@@ -5,7 +5,7 @@ import type { PluginResult } from "../src/measure.js";
 const added = (kindChars: [string, number][]) => {
   const sections = kindChars.map(([kind, n]) => ({ kind: kind as "hook", text: "x".repeat(n) }));
   const text = sections.map((s) => s.text).join("\n");
-  return { sections, text, chars: text.length };
+  return { sections, text, chars: text.length, notices: [] };
 };
 const result = (over: Partial<PluginResult>): PluginResult => ({ status: "ok", rounds: 3, mcp: [], warnings: [], ...over });
 const row = (name: string, over: Partial<PluginResult>, enabled = true): Row => ({ id: `${name}@m`, name, enabled, result: result(over) });
@@ -99,14 +99,14 @@ describe("notes", () => {
 
 describe("renderWhy", () => {
   it("prints the exact added text under section headings", () => {
-    const out = renderWhy("heavy", result({ added: { sections: [{ kind: "hook", text: "HOOK TEXT" }, { kind: "listing", text: "- a:b: c" }], text: "", chars: 16 } }));
+    const out = renderWhy("heavy", result({ added: { sections: [{ kind: "hook", text: "HOOK TEXT" }, { kind: "listing", text: "- a:b: c" }], text: "", chars: 16, notices: [] } }));
     expect(out).toContain("hook");
     expect(out).toContain("HOOK TEXT");
     expect(out).toContain("- a:b: c");
   });
 
   it("says clearly when nothing was added", () => {
-    expect(renderWhy("empty", result({ added: { sections: [], text: "", chars: 0 } }))).toMatch(/adds no text/);
+    expect(renderWhy("empty", result({ added: { sections: [], text: "", chars: 0, notices: [] } }))).toMatch(/adds no text/);
   });
 
   it("reports a failure", () => {
@@ -114,7 +114,7 @@ describe("renderWhy", () => {
   });
 
   it("warns that varying text is one example", () => {
-    expect(renderWhy("v", result({ status: "varies", added: { sections: [{ kind: "hook", text: "x" }], text: "x", chars: 1 } }))).toMatch(/changes between runs/);
+    expect(renderWhy("v", result({ status: "varies", added: { sections: [{ kind: "hook", text: "x" }], text: "x", chars: 1, notices: [] } }))).toMatch(/changes between runs/);
   });
 });
 
