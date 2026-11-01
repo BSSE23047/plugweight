@@ -1,0 +1,216 @@
+{
+  "snapshot": "2026-11-01",
+  "claudeVersion": "2.1.316",
+  "rule": "SELECTION.md",
+  "plugins": [
+    {
+      "id": "frontend-design@claude-plugins-official",
+      "name": "frontend-design",
+      "installs": 1266133,
+      "repo": "https://github.com/anthropics/claude-plugins-official.git",
+      "path": "plugins/frontend-design",
+      "commit": "a7ba5b93db0c7c8d17f3f1d25853adca79598a1a"
+    },
+    {
+      "id": "superpowers@claude-plugins-official",
+      "name": "superpowers",
+      "installs": 1123984,
+      "repo": "https://github.com/obra/superpowers.git",
+      "path": "",
+      "commit": "bb92a77741419a4ab5f06e711a283343f1ada0c3"
+    },
+    {
+      "id": "code-review@claude-plugins-official",
+      "name": "code-review",
+      "installs": 477558,
+      "repo": "https://github.com/anthropics/claude-plugins-official.git",
+      "path": "plugins/code-review",
+      "commit": "a7ba5b93db0c7c8d17f3f1d25853adca79598a1a"
+    },
+    {
+      "id": "context7@claude-plugins-official",
+      "name": "context7",
+      "installs": 441485,
+      "repo": "https://github.com/anthropics/claude-plugins-official.git",
+      "path": "external_plugins/context7",
+      "commit": "a7ba5b93db0c7c8d17f3f1d25853adca79598a1a"
+    },
+    {
+      "id": "skill-creator@claude-plugins-official",
+      "name": "skill-creator",
+      "installs": 428976,
+      "repo": "https://github.com/anthropics/claude-plugins-official.git",
+      "path": "plugins/skill-creator",
+      "commit": "a7ba5b93db0c7c8d17f3f1d25853adca79598a1a"
+    },
+    {
+      "id": "code-simplifier@claude-plugins-official",
+      "name": "code-simplifier",
+      "installs": 371422,
+      "repo": "https://github.com/anthropics/claude-plugins-official.git",
+      "path": "plugins/code-simplifier",
+      "commit": "a7ba5b93db0c7c8d17f3f1d25853adca79598a1a"
+    },
+    {
+      "id": "playwright@claude-plugins-official",
+      "name": "playwright",
+      "installs": 358117,
+      "repo": "https://github.com/anthropics/claude-plugins-official.git",
+      "path": "external_plugins/playwright",
+      "commit": "a7ba5b93db0c7c8d17f3f1d25853adca79598a1a"
+    },
+    {
+      "id": "github@claude-plugins-official",
+      "name": "github",
+      "installs": 345391,
+      "repo": "https://github.com/anthropics/claude-plugins-official.git",
+      "path": "external_plugins/github",
+      "commit": "a7ba5b93db0c7c8d17f3f1d25853adca79598a1a"
+    },
+    {
+      "id": "claude-md-management@claude-plugins-official",
+      "name": "claude-md-management",
+      "installs": 314007,
+      "repo": "https://github.com/anthropics/claude-plugins-official.git",
+      "path": "plugins/claude-md-management",
+      "commit": "a7ba5b93db0c7c8d17f3f1d25853adca79598a1a"
+    },
+    {
+      "id": "vercel@claude-plugins-official",
+      "name": "vercel",
+      "installs": 292985,
+      "repo": "https://github.com/vercel/vercel-plugin.git",
+      "path": "",
+      "commit": "882e66c2698689324c341b7bb8fd8beb92c27bf6"
+    },
+    {
+      "id": "feature-dev@claude-plugins-official",
+      "name": "feature-dev",
+      "installs": 269187,
+      "repo": "https://github.com/anthropics/claude-plugins-official.git",
+      "path": "plugins/feature-dev",
+      "commit": "a7ba5b93db0c7c8d17f3f1d25853adca79598a1a"
+    },
+    {
+      "id": "security-guidance@claude-plugins-official",
+      "name": "security-guidance",
+      "installs": 268918,
+      "repo": "https://github.com/anthropics/claude-plugins-official.git",
+      "path": "plugins/security-guidance",
+      "commit": "a7ba5b93db0c7c8d17f3f1d25853adca79598a1a"
+    },
+    {
+      "id": "typescript-lsp@claude-plugins-official",
+      "name": "typescript-lsp",
+      "installs": 228185,
+      "repo": "https://github.com/anthropics/claude-plugins-official.git",
+      "path": "plugins/typescript-lsp",
+      "commit": "a7ba5b93db0c7c8d17f3f1d25853adca79598a1a"
+    },
+    {
+      "id": "claude-code-setup@claude-plugins-official",
+      "name": "claude-code-setup",
+      "installs": 221459,
+      "repo": "https://github.com/anthropics/claude-plugins-official.git",
+      "path": "plugins/claude-code-setup",
+      "commit": "a7ba5b93db0c7c8d17f3f1d25853adca79598a1a"
+    },
+    {
+      "id": "ralph-loop@claude-plugins-official",
+      "name": "ralph-loop",
+      "installs": 199259,
+      "repo": "https://github.com/anthropics/claude-plugins-official.git",
+      "path": "plugins/ralph-loop",
+      "commit": "a7ba5b93db0c7c8d17f3f1d25853adca79598a1a"
+    },
+    {
+      "id": "figma@claude-plugins-official",
+      "name": "figma",
+      "installs": 184171,
+      "repo": "https://github.com/figma/mcp-server-guide.git",
+      "path": "",
+      "commit": "f2789420e7e8b4e2465dfeb1e12e1fc6a31397e5"
+    },
+    {
+      "id": "commit-commands@claude-plugins-official",
+      "name": "commit-commands",
+      "installs": 178476,
+      "repo": "https://github.com/anthropics/claude-plugins-official.git",
+      "path": "plugins/commit-commands",
+      "commit": "a7ba5b93db0c7c8d17f3f1d25853adca79598a1a"
+    },
+    {
+      "id": "supabase@claude-plugins-official",
+      "name": "supabase",
+      "installs": 126512,
+      "repo": "https://github.com/supabase-community/supabase-plugin.git",
+      "path": "",
+      "commit": "2c6d02d4565babe784103ee4d446a93ae9b24151"
+    },
+    {
+      "id": "chrome-devtools-mcp@claude-plugins-official",
+      "name": "chrome-devtools-mcp",
+      "installs": 123586,
+      "repo": "https://github.com/ChromeDevTools/chrome-devtools-mcp.git",
+      "path": "",
+      "commit": "a878bcad39584337e055778353246820deafa7c0"
+    },
+    {
+      "id": "pr-review-toolkit@claude-plugins-official",
+      "name": "pr-review-toolkit",
+      "installs": 123475,
+      "repo": "https://github.com/anthropics/claude-plugins-official.git",
+      "path": "plugins/pr-review-toolkit",
+      "commit": "a7ba5b93db0c7c8d17f3f1d25853adca79598a1a"
+    },
+    {
+      "id": "pyright-lsp@claude-plugins-official",
+      "name": "pyright-lsp",
+      "installs": 118419,
+      "repo": "https://github.com/anthropics/claude-plugins-official.git",
+      "path": "plugins/pyright-lsp",
+      "commit": "a7ba5b93db0c7c8d17f3f1d25853adca79598a1a"
+    },
+    {
+      "id": "slack@claude-plugins-official",
+      "name": "slack",
+      "installs": 111919,
+      "repo": "https://github.com/slackapi/slack-mcp-plugin.git",
+      "path": "",
+      "commit": "ad6be88096678812c448b0279390b4d25bce0164"
+    },
+    {
+      "id": "telegram@claude-plugins-official",
+      "name": "telegram",
+      "installs": 106438,
+      "repo": "https://github.com/anthropics/claude-plugins-official.git",
+      "path": "external_plugins/telegram",
+      "commit": "a7ba5b93db0c7c8d17f3f1d25853adca79598a1a"
+    },
+    {
+      "id": "atlassian@claude-plugins-official",
+      "name": "atlassian",
+      "installs": 105141,
+      "repo": "https://github.com/atlassian/atlassian-mcp-server.git",
+      "path": "",
+      "commit": "b74220d41142fae52b4f680c805b2ab81050991a"
+    },
+    {
+      "id": "serena@claude-plugins-official",
+      "name": "serena",
+      "installs": 89689,
+      "repo": "https://github.com/anthropics/claude-plugins-official.git",
+      "path": "external_plugins/serena",
+      "commit": "a7ba5b93db0c7c8d17f3f1d25853adca79598a1a"
+    },
+    {
+      "id": "nauraiz-dev@nauraiz-dev",
+      "name": "nauraiz-dev",
+      "installs": null,
+      "repo": "https://github.com/BSSE23047/nauraiz-dev.git",
+      "path": "",
+      "commit": "e32f1f7857dc4d4b78619bd4ac3fbb278b08a01c",
+      "ownProject": true
+    }
+  ]
+}

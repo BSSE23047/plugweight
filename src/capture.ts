@@ -104,7 +104,14 @@ function runClaude(claudeBin: string, args: string[], cwd: string, env: NodeJS.P
 }
 
 /** Runs one headless session against the stub and returns the request Claude Code would have sent. */
-export async function capture(opts: { pluginDir?: string; timeoutMs?: number; claudeBin?: string }): Promise<CaptureResult> {
+export type CaptureOptions = {
+  timeoutMs?: number;
+  claudeBin?: string;
+  /** Interface the stub listens on. The leaderboard's containers reach it from outside localhost. */
+  stubHost?: string;
+};
+
+export async function capture(opts: CaptureOptions & { pluginDir?: string }): Promise<CaptureResult> {
   const claudeBin = opts.claudeBin ?? "claude";
   if (opts.pluginDir !== undefined && !existsSync(opts.pluginDir)) {
     return { ok: false, reason: `plugin directory does not exist: ${opts.pluginDir}` };
@@ -114,7 +121,7 @@ export async function capture(opts: { pluginDir?: string; timeoutMs?: number; cl
     return { ok: false, reason: `Claude Code not found: could not run "${claudeBin} --version"` };
   }
 
-  const stub = await startStub();
+  const stub = await startStub({ host: opts.stubHost });
   const configDir = mkdtempSync(join(tmpdir(), "plugweight-config-"));
   const cwd = mkdtempSync(join(tmpdir(), "plugweight-cwd-"));
   try {

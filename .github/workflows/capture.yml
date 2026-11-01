@@ -1,0 +1,53 @@
+name: Capture
+# Runs other people's plugins, so it holds no secrets, reads only, and uses one job per plugin.
+on:
+  workflow_dispatch:
+    inputs:
+      only:
+        description: Comma-separated plugin names (empty for all)
+        required: false
+        default: ""
+permissions:
+  contents: read
+jobs:
+  list:
+    runs-on: ubuntu-latest
+    outputs:
+      names: ${{ steps.names.outputs.names }}
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+      - id: names
+        env:
+          ONLY: ${{ inputs.only }}
+        run: |
+          names=$(jq -c --arg only "$ONLY" '[.plugins[].name | select($only == "" or (($only | split(",")) | index(.)))]' plugins.json)
+          echo "names=$names" >> "$GITHUB_OUTPUT"
+  capture:
+    needs: list
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    strategy:
+      fail-fast: false
+      matrix:
+        name: ${{ fromJson(needs.list.outputs.names) }}
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - run: npm ci
+      - run: npm run build
+      - run: docker build -t plugweight-capture pipeline
+      - run: node scripts/capture-one.mjs "$PLUGIN" out
+        env:
+          PLUGIN: ${{ matrix.name }}
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: capture-${{ matrix.name }}
+          path: out/
+          if-no-files-found: warn
