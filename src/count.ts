@@ -101,28 +101,46 @@ function runOnce(claudeBin: string, args: string[], input: string, timeoutMs: nu
 
 export type CountOptions = { timeoutMs?: number; runs?: number; claudeBin?: string; pluginIds?: string[] };
 
+export type Counter = { count(text: string): Promise<number>; model: string };
+
 /**
- * Real tokens for text a plugin added, without loading the plugin. Uses the user's login and a
- * little of their usage: the same plugin-free session is run with and without the text.
+ * Counts real tokens for text a plugin added, without loading the plugin. Uses the user's login and
+ * a little of their usage: the same plugin-free session is run with and without the text. The
+ * baseline is measured once per counter.
  */
-export async function countTokens(text: string, opts: CountOptions = {}): Promise<{ tokens: number; model: string; claudeVersion: string }> {
+export function createCounter(opts: CountOptions = {}): Counter {
   const claudeBin = opts.claudeBin ?? "claude";
-  const args = buildCountArgs(opts.pluginIds ?? installedPluginIds(claudeBin));
   const timeoutMs = opts.timeoutMs ?? DEFAULT_TIMEOUT_MS;
   const runs = opts.runs ?? DEFAULT_RUNS;
+  let args: string[] | undefined;
+  let baseline: Promise<number[]> | undefined;
 
-  const collect = async (input: string): Promise<CountRun[]> => {
-    const out: CountRun[] = [];
-    for (let i = 0; i < runs; i++) out.push(await runOnce(claudeBin, args, input, timeoutMs));
+  const collect = async (input: string): Promise<number[]> => {
+    args ??= buildCountArgs(opts.pluginIds ?? installedPluginIds(claudeBin));
+    const out: number[] = [];
+    for (let i = 0; i < runs; i++) {
+      const run = await runOnce(claudeBin, args, input, timeoutMs);
+      counter.model = run.model;
+      out.push(run.tokens);
+    }
     return out;
   };
-  const baseline = await collect(buildCountInput(""));
-  const arm = text === "" ? baseline : await collect(buildCountInput(text));
 
-  const version = spawnSync(claudeBin, ["--version"], { encoding: "utf8", timeout: 15_000 }).stdout?.trim().split(/\s+/)[0] ?? "unknown";
-  return {
-    tokens: tokensFromRuns(arm.map((r) => r.tokens), baseline.map((r) => r.tokens)),
-    model: arm[0]?.model ?? COUNT_MODEL,
-    claudeVersion: version,
+  const counter: Counter = {
+    model: COUNT_MODEL,
+    async count(text: string): Promise<number> {
+      if (text === "") return 0;
+      baseline ??= collect(buildCountInput(""));
+      const base = await baseline;
+      return tokensFromRuns(await collect(buildCountInput(text)), base);
+    },
   };
+  return counter;
+}
+
+export async function countTokens(text: string, opts: CountOptions = {}): Promise<{ tokens: number; model: string; claudeVersion: string }> {
+  const counter = createCounter(opts);
+  const tokens = await counter.count(text);
+  const version = spawnSync(opts.claudeBin ?? "claude", ["--version"], { encoding: "utf8", timeout: 15_000 }).stdout?.trim().split(/\s+/)[0] ?? "unknown";
+  return { tokens, model: counter.model, claudeVersion: version };
 }

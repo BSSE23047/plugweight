@@ -6,6 +6,8 @@ export type CapturedRequest = {
   messages: unknown[];
 };
 
+export type McpServer = { name: string; status: string };
+
 export type CaptureResult =
-  | { ok: true; request: CapturedRequest; claudeVersion: string }
+  | { ok: true; request: CapturedRequest; claudeVersion: string; mcp: McpServer[] }
   | { ok: false; reason: string };

@@ -3,7 +3,7 @@ import { existsSync, mkdtempSync, rmSync } from "node:fs";
 import { tmpdir } from "node:os";
 import { join } from "node:path";
 import { startStub } from "./stub.js";
-import type { CaptureResult, CapturedRequest } from "./types.js";
+import type { CaptureResult, CapturedRequest, McpServer } from "./types.js";
 
 const CAPTURE_PROMPT = "Reply with exactly: ok";
 const CAPTURE_MODEL = "claude-haiku-5-5";
@@ -40,16 +40,48 @@ function readVersion(claudeBin: string): string | undefined {
   return result.stdout.trim().split(/\s+/)[0];
 }
 
-type RunOutcome = { code: number | null; stderr: string; timedOut: boolean; spawnError?: string };
+type RunOutcome = { code: number | null; stdout: string; stderr: string; timedOut: boolean; spawnError?: string };
+
+type InitEvent = {
+  type?: string;
+  subtype?: string;
+  plugins?: { source?: string }[];
+  plugin_errors?: { message?: string }[];
+  mcp_servers?: McpServer[];
+};
+
+/** Claude Code exits 0 even when a plugin fails to load, so the session's init event is the only signal. */
+export function readInit(stdout: string): InitEvent | undefined {
+  for (const line of stdout.split("\n")) {
+    if (!line.includes('"init"')) continue;
+    try {
+      const event = JSON.parse(line) as InitEvent;
+      if (event.type === "system" && event.subtype === "init") return event;
+    } catch {
+      // Not a complete JSON line: keep looking.
+    }
+  }
+  return undefined;
+}
+
+/** Why the plugin under test did not load, or undefined if it did. */
+export function pluginLoadProblem(init: InitEvent | undefined): string | undefined {
+  if (!init) return "Claude Code did not report a session start";
+  const errors = init.plugin_errors ?? [];
+  if (errors.length > 0) return errors.map((e) => e.message ?? "unknown plugin error").join("; ");
+  if (!(init.plugins ?? []).some((p) => p.source?.endsWith("@inline"))) return "the plugin did not load";
+  return undefined;
+}
 
 function runClaude(claudeBin: string, args: string[], cwd: string, env: NodeJS.ProcessEnv, timeoutMs: number): Promise<RunOutcome> {
   return new Promise((resolve) => {
     // A separate process group lets a timeout also stop hooks the plugin started.
-    const child = spawn(claudeBin, args, { cwd, env, detached: true, stdio: ["ignore", "ignore", "pipe"] });
+    const child = spawn(claudeBin, args, { cwd, env, detached: true, stdio: ["ignore", "pipe", "pipe"] });
+    let stdout = "";
     let stderr = "";
-    const finish = (outcome: Omit<RunOutcome, "stderr">) => {
+    const finish = (outcome: Omit<RunOutcome, "stdout" | "stderr">) => {
       clearTimeout(timer);
-      resolve({ ...outcome, stderr: stderr.slice(-500) });
+      resolve({ ...outcome, stdout, stderr: stderr.slice(-500) });
     };
     const timer = setTimeout(() => {
       try {
@@ -60,6 +92,9 @@ function runClaude(claudeBin: string, args: string[], cwd: string, env: NodeJS.P
       // Resolve here: an orphaned hook can hold stderr open and delay "close" forever.
       finish({ code: null, timedOut: true });
     }, timeoutMs);
+    child.stdout.on("data", (chunk: Buffer) => {
+      stdout += chunk.toString("utf8");
+    });
     child.stderr.on("data", (chunk: Buffer) => {
       stderr += chunk.toString("utf8");
     });
@@ -83,7 +118,7 @@ export async function capture(opts: { pluginDir?: string; timeoutMs?: number; cl
   const configDir = mkdtempSync(join(tmpdir(), "plugweight-config-"));
   const cwd = mkdtempSync(join(tmpdir(), "plugweight-cwd-"));
   try {
-    const args = ["-p", CAPTURE_PROMPT, "--model", CAPTURE_MODEL, "--output-format", "json", "--no-session-persistence"];
+    const args = ["-p", CAPTURE_PROMPT, "--model", CAPTURE_MODEL, "--output-format", "stream-json", "--verbose", "--no-session-persistence"];
     if (opts.pluginDir !== undefined) args.push("--plugin-dir", opts.pluginDir);
     const outcome = await runClaude(claudeBin, args, cwd, buildCaptureEnv(process.env, stub.url, configDir), opts.timeoutMs ?? DEFAULT_TIMEOUT_MS);
 
@@ -91,9 +126,14 @@ export async function capture(opts: { pluginDir?: string; timeoutMs?: number; cl
     if (outcome.timedOut) return { ok: false, reason: `timed out after ${(opts.timeoutMs ?? DEFAULT_TIMEOUT_MS) / 1000} s` };
     if (outcome.code !== 0) return { ok: false, reason: `Claude Code exited with ${outcome.code}: ${outcome.stderr.trim()}` };
 
+    const init = readInit(outcome.stdout);
+    if (opts.pluginDir !== undefined) {
+      const problem = pluginLoadProblem(init);
+      if (problem) return { ok: false, reason: problem };
+    }
     const request = pickMainRequest(stub.requests());
     if (!request) return { ok: false, reason: "Claude Code sent no request" };
-    return { ok: true, request, claudeVersion };
+    return { ok: true, request, claudeVersion, mcp: (init?.mcp_servers ?? []).map(({ name, status }) => ({ name, status })) };
   } finally {
     await stub.close();
     rmSync(configDir, { recursive: true, force: true });

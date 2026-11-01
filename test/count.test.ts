@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { buildCountArgs, buildCountInput, median, promptTokens, tokensFromRuns, withinTolerance } from "../src/count.js";
+import { buildCountArgs, buildCountInput, createCounter, median, promptTokens, tokensFromRuns, withinTolerance } from "../src/count.js";
 
 describe("withinTolerance", () => {
   it("allows 2% or 10 tokens, whichever is larger", () => {
@@ -54,5 +54,17 @@ describe("token arithmetic", () => {
   it("subtracts the baseline median from the arm median, never below zero", () => {
     expect(tokensFromRuns([110, 112, 111], [100, 101, 100])).toBe(11);
     expect(tokensFromRuns([90], [100])).toBe(0);
+  });
+});
+
+describe("createCounter", () => {
+  it("spends nothing on empty text", async () => {
+    const counter = createCounter({ claudeBin: "plugweight-no-such-binary", pluginIds: [] });
+    expect(await counter.count("")).toBe(0);
+  });
+
+  it("rejects when Claude Code cannot run", async () => {
+    const counter = createCounter({ claudeBin: "plugweight-no-such-binary", pluginIds: [] });
+    await expect(counter.count("text")).rejects.toThrow(/could not start/i);
   });
 });

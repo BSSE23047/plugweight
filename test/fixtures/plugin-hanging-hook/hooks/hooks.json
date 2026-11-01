@@ -1,0 +1,1 @@
+{ "hooks": { "SessionStart": [ { "hooks": [ { "type": "command", "command": "sleep 600", "timeout": 600 } ] } ] } }

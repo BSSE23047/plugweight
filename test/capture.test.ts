@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { buildCaptureEnv, capture, pickMainRequest } from "../src/capture.js";
+import { buildCaptureEnv, capture, pickMainRequest, pluginLoadProblem, readInit } from "../src/capture.js";
 
 describe("buildCaptureEnv", () => {
   const env = buildCaptureEnv(
@@ -60,6 +60,31 @@ describe("pickMainRequest", () => {
 
   it("returns undefined when nothing was captured", () => {
     expect(pickMainRequest([])).toBeUndefined();
+  });
+});
+
+describe("plugin load detection", () => {
+  const init = (fields: object) => JSON.stringify({ type: "system", subtype: "init", ...fields });
+
+  it("finds the init event among other output", () => {
+    expect(readInit(`not json with "init"\n{"type":"other"}\n${init({ plugins: [] })}`)?.plugins).toEqual([]);
+  });
+
+  it("returns undefined when there is no init event", () => {
+    expect(readInit('{"type":"result"}')).toBeUndefined();
+    expect(pluginLoadProblem(undefined)).toMatch(/session start/);
+  });
+
+  it("reports plugin errors even when Claude Code exits normally", () => {
+    expect(pluginLoadProblem({ plugins: [], plugin_errors: [{ message: "corrupt manifest" }] })).toBe("corrupt manifest");
+  });
+
+  it("notices when the plugin is silently missing", () => {
+    expect(pluginLoadProblem({ plugins: [{ source: "x@builtin" }] })).toMatch(/did not load/);
+  });
+
+  it("accepts a loaded plugin", () => {
+    expect(pluginLoadProblem({ plugins: [{ source: "demo@inline" }] })).toBeUndefined();
   });
 });
 
