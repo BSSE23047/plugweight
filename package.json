@@ -5,9 +5,18 @@
   "type": "module",
   "license": "MIT",
   "author": "Nauraiz Haider",
-  "keywords": ["claude-code", "claude", "plugins", "tokens", "cli"],
+  "keywords": [
+    "claude-code",
+    "claude",
+    "plugins",
+    "tokens",
+    "cli"
+  ],
   "homepage": "https://github.com/BSSE23047/plugweight#readme",
-  "repository": "github:BSSE23047/plugweight",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/BSSE23047/plugweight.git"
+  },
   "engines": {
     "node": ">=20"
   },

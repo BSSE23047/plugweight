@@ -52,7 +52,7 @@ Needs Node 20 or newer and [Claude Code](https://code.claude.com).
 npx plugweight
 ```
 
-The npm release is about to go out. Until then, run it from source:
+Or from source:
 
 ```bash
 git clone https://github.com/BSSE23047/plugweight
