@@ -8,9 +8,9 @@ export const size = { width: 1200, height: 630 };
 export const contentType = "image/png";
 
 export default function OpengraphImage() {
-  const { ranked } = rank(loadResults());
-  const top = ranked.slice(0, 5);
-  const max = Math.max(1, ...top.map((e) => e.range?.[1] ?? e.tokens ?? 0));
+  // Only exact figures from other people's plugins: an "at least" is too uncertain for a headline image.
+  const top = rank(loadResults()).ranked.filter((e) => e.status === "ok" && !e.minimum && !e.ownProject).slice(0, 5);
+  const max = Math.max(1, ...top.map((e) => e.tokens ?? 0));
   return new ImageResponse(
     <div style={{ display: "flex", flexDirection: "column", width: "100%", height: "100%", background: "#10120d", color: "#eef0e6", padding: 64, fontFamily: "sans-serif" }}>
       <div style={{ fontSize: 34, fontWeight: 700 }}>plugweight</div>
@@ -22,7 +22,7 @@ export default function OpengraphImage() {
               <span>{e.name}</span>
               <span>{figureText(e)} tokens</span>
             </div>
-            <div style={{ display: "flex", height: 10, width: `${((e.range?.[1] ?? e.tokens ?? 0) / max) * 100}%`, background: "#c9f03c" }} />
+            <div style={{ display: "flex", height: 10, width: `${((e.tokens ?? 0) / max) * 100}%`, background: "#c9f03c" }} />
           </div>
         ))}
       </div>

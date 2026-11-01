@@ -2,6 +2,8 @@
 
 See what each Claude Code plugin really adds to every session. Measured, not estimated.
 
+**[See the leaderboard](https://plugweight.vercel.app)**
+
 Every plugin you install adds text to your sessions: skill lists, hook messages, tool names. That text uses your tokens before you have asked for anything. plugweight shows how much, and exactly what it is.
 
 ```text
@@ -42,7 +44,7 @@ The 25 most-installed plugins in Claude Code's official marketplace, plus the au
 
 "At least" means part of the plugin needs a sign-in or its own settings, so its real cost may be higher. Two plugins need setup before they can be measured at all, and are listed that way rather than as zero.
 
-The website is coming shortly.
+The [leaderboard](https://plugweight.vercel.app) has all of them, with the exact text each plugin adds. Plugin authors can copy a README badge from their plugin's page.
 
 ## Try it
 
